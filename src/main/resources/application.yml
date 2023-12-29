@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/healthhub
+    username: root
+    password: Password2000
+  jpa:
+    hibernate.ddl-auto: update
+    show-sql: true
+
+
+App:
+  authType: Session
+  cookie :
+    login: login
+  session:
+    login: login
