@@ -34,6 +34,9 @@ public class ProfileDto {
     @NotBlank
     @NotNull
     private String nextOfKinDetails;
+    @NotBlank
+    @NotNull
+    private String password;
 
 
 

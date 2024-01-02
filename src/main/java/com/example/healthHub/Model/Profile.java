@@ -3,6 +3,7 @@ package com.example.healthHub.Model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.Persistent;
 
 @Entity
 @Getter
@@ -33,5 +34,6 @@ public class Profile {
     @Column(nullable = false)
     private String staffId;
     private boolean deleted;
+    private String password;
 
 }

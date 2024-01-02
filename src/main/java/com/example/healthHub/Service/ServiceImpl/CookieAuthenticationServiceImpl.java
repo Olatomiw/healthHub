@@ -1,11 +1,13 @@
 package com.example.healthHub.Service.ServiceImpl;
 
 import com.example.healthHub.Model.Admin;
+import com.example.healthHub.Model.Profile;
 import com.example.healthHub.Repository.AdminRepository;
 import com.example.healthHub.Service.CookieAuthenticationService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.aspectj.weaver.ast.Instanceof;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -76,5 +78,14 @@ public class CookieAuthenticationServiceImpl implements CookieAuthenticationServ
 
 
         return admin.get();
+    }
+
+    @Override
+    public void login(Profile profile, HttpServletResponse response) {
+        Cookie cookie = new Cookie(loginCookieName, profile.getStaffId());
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(1*60*10);
+        response.addCookie(cookie);
     }
 }

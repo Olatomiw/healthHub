@@ -7,5 +7,6 @@ import org.springframework.http.ResponseEntity;
 import java.util.Optional;
 
 public interface ProfileRepository extends JpaRepository<Profile, Long> {
+    Optional<Profile>findByStaffId(String staffId);
     Optional<Profile>findByStaffIdOrFirstName(String staffId, String firstName);
 }

@@ -2,6 +2,7 @@ package com.example.healthHub.Service.ServiceImpl;
 
 
 import com.example.healthHub.Dto.ProfileDto;
+import com.example.healthHub.Dto.response.ApiResponse;
 import com.example.healthHub.Model.Profile;
 import com.example.healthHub.Model.Token;
 import com.example.healthHub.Repository.ProfileRepository;
@@ -28,6 +29,7 @@ public class ProfileServiceImpl implements ProfileService {
     public ResponseEntity<?> createProfile(ProfileDto profileDto) {
         Profile profile = new Profile();
         Random random = new Random();
+        ApiResponse<String> apiResponse = new ApiResponse<>();
         int randomNum = random.nextInt(1000)+0001;
         int currentYear = Year.now().getValue();
         try{
@@ -40,30 +42,36 @@ public class ProfileServiceImpl implements ProfileService {
             profile.setToken(profileDto.getToken());
             profile.setNextOfKinDetails(profileDto.getNextOfKinDetails());
             profile.setPhoneNumber(profileDto.getPhoneNumber());
-            profile.setStaffId(String.format("KH/%%%d/%d", randomNum, currentYear));
+            profile.setPassword(profileDto.getPassword());
+            profile.setStaffId(String.format("KH/%04d/%d", randomNum, currentYear));
             String staffId = profile.getStaffId();
             Optional<Profile> optionalProfile=profileRepository.findByStaffIdOrFirstName(staffId, profileDto.getFirstName());
             if(optionalProfile.isPresent()){
-                return new ResponseEntity<>("User already exist", HttpStatus.BAD_REQUEST);
+                apiResponse.setMessage("User already exist");
+                return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
             }
             Optional<Token> optionalToken = tokenRepository.findByToken(profileDto.getToken());
             if (optionalToken.isEmpty()){
-                return new ResponseEntity<>("Token doesn't exist", HttpStatus.NOT_FOUND);
+                apiResponse.setMessage("Token doesn't exist");
+                return new ResponseEntity<>(apiResponse, HttpStatus.NOT_FOUND);
             }
             Token token = optionalToken.get();
             if (token.isUsed() == true){
-                return new ResponseEntity<>("Token already used", HttpStatus.BAD_REQUEST);
+                apiResponse.setMessage("token already used");
+                return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
             }
-            Date expChecker = Date.from(Instant.now());
-            if(expChecker.after(token.getExpiresAt())){
-                token.setUsed(true);
-                tokenRepository.save(token);
-                return new ResponseEntity<>("Invalid Token", HttpStatus.UNAUTHORIZED);
+            Instant expChecker = Instant.now();
+            if(expChecker.isAfter(token.getExpiresAt())){
+                tokenRepository.delete(token);
+                apiResponse.setMessage("Invalid Token");
+                return new ResponseEntity<>(apiResponse, HttpStatus.UNAUTHORIZED);
             }
             token.setUsed(true);
             tokenRepository.save(token);
             profileRepository.save(profile);
-            return new ResponseEntity<>(staffId, HttpStatus.OK);
+            apiResponse.setData(staffId);
+            apiResponse.setMessage("Login with your unique ID");
+            return new ResponseEntity<>(apiResponse, HttpStatus.OK);
         }
         catch (Exception e){
             e.printStackTrace();

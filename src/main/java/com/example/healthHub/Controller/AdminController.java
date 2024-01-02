@@ -3,6 +3,7 @@ package com.example.healthHub.Controller;
 import com.example.healthHub.Dto.Admin.AdminDto;
 import com.example.healthHub.Dto.Admin.AuthenticationDto;
 import com.example.healthHub.Dto.Admin.TokenDto;
+import com.example.healthHub.Dto.response.ApiResponse;
 import com.example.healthHub.Model.Admin;
 import com.example.healthHub.Model.Token;
 import com.example.healthHub.Repository.AdminRepository;
@@ -19,6 +20,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 
 @RestController
@@ -48,11 +55,20 @@ public class AdminController {
     @PostMapping("/token")
     public ResponseEntity<?> createToken(@Valid @RequestBody TokenDto tokenDto, HttpServletRequest request){
        Admin admin = cookieAuthenticationService.getLoggedInUser(request);
-       admin.generateToken(tokenDto);
-        Token token = admin.getTokens().get(0);
-        String token1 = token.getToken();
+        List<Token> tokens = admin.getTokens();
+        Token generatedToken = new Token();
+        ApiResponse<String> objectApiResponse = new ApiResponse<>();
+        generatedToken.setGeneratedFor(tokenDto.getGeneratedFor());
+        generatedToken.setToken(UUID.randomUUID().toString());
+        generatedToken.setCreatedAt(Instant.now());
+        Instant createdAt = generatedToken.getCreatedAt();
+        generatedToken.setExpiresAt(createdAt.plus(1, ChronoUnit.HOURS));
+        tokens.add(generatedToken);
+        String token = generatedToken.getToken();
+        objectApiResponse.setData(token);
+        objectApiResponse.setMessage("Successfully Created");
         adminRepository.save(admin);
-        return new ResponseEntity<>(token1,  HttpStatus.CREATED);
+        return new ResponseEntity<>(objectApiResponse,  HttpStatus.CREATED);
     }
 
 }

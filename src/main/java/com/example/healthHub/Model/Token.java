@@ -16,7 +16,7 @@ public class Token {
     private String generatedFor;
     private boolean used;
     private Instant createdAt;
-    private Date expiresAt;
+    private Instant expiresAt;
 
     public String getToken() {
         return token;
@@ -50,11 +50,11 @@ public class Token {
         this.createdAt = createdAt;
     }
 
-    public Date getExpiresAt() {
+    public Instant getExpiresAt() {
         return expiresAt;
     }
 
-    public void setExpiresAt(Date expiresAt) {
+    public void setExpiresAt(Instant expiresAt) {
         this.expiresAt = expiresAt;
     }
 }
