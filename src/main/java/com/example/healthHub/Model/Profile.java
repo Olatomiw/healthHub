@@ -31,7 +31,6 @@ public class Profile {
     private String Role;
     @Column(nullable = false)
     private String nextOfKinDetails;
-    @Column(nullable = false)
     private String staffId;
     private boolean deleted;
     private String password;

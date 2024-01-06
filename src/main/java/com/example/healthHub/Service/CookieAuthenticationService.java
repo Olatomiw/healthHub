@@ -1,6 +1,7 @@
 package com.example.healthHub.Service;
 
 import com.example.healthHub.Model.Admin;
+import com.example.healthHub.Model.Patient;
 import com.example.healthHub.Model.Profile;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,4 +14,6 @@ public interface CookieAuthenticationService {
     Admin getLoggedInUser(HttpServletRequest request);
 
     void login(Profile profile, HttpServletResponse response);
+    Profile getLoggedInStaff(HttpServletRequest request);
+
 }

@@ -1,8 +1,10 @@
 package com.example.healthHub.Service.ServiceImpl;
 
 import com.example.healthHub.Model.Admin;
+import com.example.healthHub.Model.Patient;
 import com.example.healthHub.Model.Profile;
 import com.example.healthHub.Repository.AdminRepository;
+import com.example.healthHub.Repository.ProfileRepository;
 import com.example.healthHub.Service.CookieAuthenticationService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,6 +27,8 @@ public class CookieAuthenticationServiceImpl implements CookieAuthenticationServ
     private String loginCookieName;
     @Autowired
     private AdminRepository adminRepository;
+    @Autowired
+    private ProfileRepository profileRepository;
 
 
     @Override
@@ -75,8 +79,6 @@ public class CookieAuthenticationServiceImpl implements CookieAuthenticationServ
         if (admin.isEmpty()){
             return null;
         }
-
-
         return admin.get();
     }
 
@@ -87,5 +89,32 @@ public class CookieAuthenticationServiceImpl implements CookieAuthenticationServ
         cookie.setHttpOnly(true);
         cookie.setMaxAge(1*60*10);
         response.addCookie(cookie);
+    }
+
+    @Override
+    public Profile getLoggedInStaff(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        boolean loggedIn = false;
+        Cookie loginCookie = null;
+        if (cookies == null){
+            return null;
+        }
+
+        for (int i = 0; i < cookies.length; i++) {
+            Cookie cookie = cookies[i];
+            if (cookie.getName().equals(loginCookieName)){
+                loggedIn = true;
+                loginCookie = cookie;
+                break;
+            }
+        }
+        if (!loggedIn){
+            return null;
+        }
+        Optional<Profile> profile = profileRepository.findByStaffId(loginCookie.getValue());
+        if (profile.isEmpty()){
+            return null;
+        }
+        return profile.get();
     }
 }

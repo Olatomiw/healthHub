@@ -47,11 +47,6 @@ public class AdminController {
         return  adminService.createAdmin(adminDto);
 
     }
-
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody AuthenticationDto authenticationDto, HttpServletResponse response, HttpServletRequest request){
-       return authenticationService.login(authenticationDto,request, response );
-    }
     @PostMapping("/token")
     public ResponseEntity<?> createToken(@Valid @RequestBody TokenDto tokenDto, HttpServletRequest request){
        Admin admin = cookieAuthenticationService.getLoggedInUser(request);

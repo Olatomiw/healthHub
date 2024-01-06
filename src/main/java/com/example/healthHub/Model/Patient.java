@@ -1,22 +1,90 @@
 package com.example.healthHub.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.Instant;
+import java.util.List;
 
-//@Entity
+@Entity
+
 public class Patient {
     @Id
-
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String fullname;
+    private String fullName;
     private String bloodGroup;
-    private Integer age;
+    private Long age;
     private String address;
     private Instant createdAt;
     private Instant updatedAt;
+
+    @OneToMany( cascade = CascadeType.ALL)
+    @JoinColumn(name = "patient_id", referencedColumnName = "id")
+    private List<PatientsReport> reportList;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getBloodGroup() {
+        return bloodGroup;
+    }
+
+    public void setBloodGroup(String bloodGroup) {
+        this.bloodGroup = bloodGroup;
+    }
+
+    public Long getAge() {
+        return age;
+    }
+
+    public void setAge(Long age) {
+        this.age = age;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Instant updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public List<PatientsReport> getReportList() {
+        return reportList;
+    }
+
+    public void setReportList(List<PatientsReport> reportList) {
+        this.reportList = reportList;
+    }
 }

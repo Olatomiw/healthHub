@@ -32,6 +32,8 @@ public class ProfileServiceImpl implements ProfileService {
         ApiResponse<String> apiResponse = new ApiResponse<>();
         int randomNum = random.nextInt(1000)+0001;
         int currentYear = Year.now().getValue();
+        Long count = profileRepository.count();
+        Long id = ++count;
         try{
             profile.setFirstName(profileDto.getFirstName());
             profile.setLastName(profileDto.getLastName());
@@ -42,10 +44,10 @@ public class ProfileServiceImpl implements ProfileService {
             profile.setToken(profileDto.getToken());
             profile.setNextOfKinDetails(profileDto.getNextOfKinDetails());
             profile.setPhoneNumber(profileDto.getPhoneNumber());
+            profile.setStaffId(String.format("KH/%04d/%d", id, currentYear));
             profile.setPassword(profileDto.getPassword());
-            profile.setStaffId(String.format("KH/%04d/%d", randomNum, currentYear));
             String staffId = profile.getStaffId();
-            Optional<Profile> optionalProfile=profileRepository.findByStaffIdOrFirstName(staffId, profileDto.getFirstName());
+            Optional<Profile> optionalProfile=profileRepository.findByStaffId(staffId);
             if(optionalProfile.isPresent()){
                 apiResponse.setMessage("User already exist");
                 return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);

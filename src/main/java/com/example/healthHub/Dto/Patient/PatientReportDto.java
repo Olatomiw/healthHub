@@ -1,5 +1,11 @@
 package com.example.healthHub.Dto.Patient;
 
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class PatientReportDto {
     private String height;
     private String weight;
@@ -7,6 +13,8 @@ public class PatientReportDto {
     private String labReport;
     private String doctorsReport;
     private String prescribedDrugs;
+    @NotNull
+    private Long Age;
 
     public String getHeight() {
         return height;
