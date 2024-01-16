@@ -19,7 +19,8 @@ public class Patient {
     private String address;
     private Instant createdAt;
     private Instant updatedAt;
-
+    private String createdBy;
+    private String patientId;
     @OneToMany( cascade = CascadeType.ALL)
     @JoinColumn(name = "patient_id", referencedColumnName = "id")
     private List<PatientsReport> reportList;
@@ -86,5 +87,13 @@ public class Patient {
 
     public void setReportList(List<PatientsReport> reportList) {
         this.reportList = reportList;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 }

@@ -28,6 +28,7 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public ResponseEntity<?> newPatient(PatientDto patientDto, HttpServletRequest request) {
         Profile loggedInStaff = cookieAuthenticationService.getLoggedInStaff(request);
+        String name = loggedInStaff.getFirstName();
         String role = loggedInStaff.getRole();
         ApiResponse<String> apiResponse = new ApiResponse<>();
         Patient patient = new Patient();
@@ -40,6 +41,7 @@ public class PatientServiceImpl implements PatientService {
             patient.setAge(patientDto.getAge());
             patient.setAddress(patientDto.getAddress());
             patient.setCreatedAt(Instant.now().plus(1, ChronoUnit.HOURS));
+            patient.setCreatedBy(name);
             patientRepository.save(patient);
         }
         catch (Exception e){
