@@ -53,15 +53,5 @@ public class Admin {
         this.tokens = tokens;
     }
 
-//    public Token generateToken(TokenDto tokenDto){
-//        Token generatedToken = new Token();
-//       generatedToken.setGeneratedFor(tokenDto.getGeneratedFor());
-//        generatedToken.setToken(UUID.randomUUID().toString());
-//        generatedToken.setCreatedAt(Instant.now());
-//       generatedToken.setExpiresAt(Date.from(Instant.now()));
-//       tokens.add(generatedToken);
-//       return generatedToken;
-//
-//   };
 
 }
