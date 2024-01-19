@@ -23,7 +23,7 @@ import java.util.Optional;
 @Service
 
 public class CookieAuthenticationServiceImpl implements CookieAuthenticationService {
-    @Value("${App.cookie.login}")
+    @Value("${app.cookie.login}")
     private String loginCookieName;
     @Autowired
     private AdminRepository adminRepository;

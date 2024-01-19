@@ -8,33 +8,37 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ExtendedSecurityServiceImpl implements ExtendedSecurityService {
 
 
-    @Value("${app.AuthTYpe}")
-    private String authTYpe;
+    @Value("${app.authType}")
+    private String authType;
 
     @Autowired
     private CookieAuthenticationService cookieAuthenticationService;
-
     @Autowired
     private SessionAuthenticationService sessionAuthenticationService;
 
     @Override
     public void login(Admin admin, HttpServletResponse response, HttpServletRequest request) {
-        if (authTYpe.equals("cookie")){
+        if (authType.equals("cookie")){
              cookieAuthenticationService.login(admin,response);
         }
-        else if (authTYpe.equals("session")){
+        else if (authType.equals("session")){
             sessionAuthenticationService.login(admin, request);
+        }
+        else{
+            System.out.println("<<<<<<<<<<<<<<<<<<<No login Mechanism>>>>>>>>>>>>>>>>>");
         }
 
     }
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response) {
-        
 
+        return;
     }
 }
