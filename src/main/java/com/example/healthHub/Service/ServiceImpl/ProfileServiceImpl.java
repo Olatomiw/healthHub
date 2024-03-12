@@ -28,9 +28,7 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public ResponseEntity<?> createProfile(ProfileDto profileDto) {
         Profile profile = new Profile();
-        Random random = new Random();
         ApiResponse<String> apiResponse = new ApiResponse<>();
-        int randomNum = random.nextInt(1000)+0001;
         int currentYear = Year.now().getValue();
         Long count = profileRepository.count();
         Long id = ++count;
@@ -41,8 +39,7 @@ public class ProfileServiceImpl implements ProfileService {
             profile.setRole(profileDto.getRole());
             profile.setSex(profileDto.getSex());
             profile.setAddress(profileDto.getAddress());
-            profile.setToken(profileDto.getToken());
-            profile.setNextOfKinDetails(profileDto.getNextOfKinDetails());
+            profile.setEmail(profileDto.getEmail());
             profile.setPhoneNumber(profileDto.getPhoneNumber());
             profile.setStaffId(String.format("KH/%04d/%d", id, currentYear));
             profile.setPassword(profileDto.getPassword());
@@ -52,24 +49,6 @@ public class ProfileServiceImpl implements ProfileService {
                 apiResponse.setMessage("User already exist");
                 return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
             }
-            Optional<Token> optionalToken = tokenRepository.findByToken(profileDto.getToken());
-            if (optionalToken.isEmpty()){
-                apiResponse.setMessage("Token doesn't exist");
-                return new ResponseEntity<>(apiResponse, HttpStatus.NOT_FOUND);
-            }
-            Token token = optionalToken.get();
-            if (token.isUsed() == true){
-                apiResponse.setMessage("token already used");
-                return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
-            }
-            Instant expChecker = Instant.now();
-            if(expChecker.isAfter(token.getExpiresAt())){
-                tokenRepository.delete(token);
-                apiResponse.setMessage("Invalid Token");
-                return new ResponseEntity<>(apiResponse, HttpStatus.UNAUTHORIZED);
-            }
-            token.setUsed(true);
-            tokenRepository.save(token);
             profileRepository.save(profile);
             apiResponse.setData(staffId);
             apiResponse.setMessage("Login with your unique ID");

@@ -1,6 +1,7 @@
 package com.example.healthHub.Service.ServiceImpl;
 
 import com.example.healthHub.Model.Admin;
+import com.example.healthHub.Model.Profile;
 import com.example.healthHub.Service.CookieAuthenticationService;
 import com.example.healthHub.Service.ExtendedSecurityService;
 import com.example.healthHub.Service.SessionAuthenticationService;
@@ -23,12 +24,12 @@ public class ExtendedSecurityServiceImpl implements ExtendedSecurityService {
     private SessionAuthenticationService sessionAuthenticationService;
 
     @Override
-    public void login(Admin admin, HttpServletResponse response, HttpServletRequest request) {
+    public void login(Profile profile, HttpServletResponse response, HttpServletRequest request) {
         if (authType.equals("cookie")){
-             cookieAuthenticationService.login(admin,response);
+             cookieAuthenticationService.login(profile,response);
         }
         else if (authType.equals("session")){
-            sessionAuthenticationService.login(admin, request);
+            sessionAuthenticationService.login(profile, request);
         }
         else{
             System.out.println("<<<<<<<<<<<<<<<<<<<No login Mechanism>>>>>>>>>>>>>>>>>");

@@ -16,6 +16,8 @@ public class ProfileDto {
     @NotBlank
     private String lastName;
     @NotNull
+    private String email;
+    @NotNull
     private Long Age;
     @NotBlank
     @NotNull
@@ -27,13 +29,7 @@ public class ProfileDto {
     private Long phoneNumber;
     @NotBlank
     @NotNull
-    private String Token;
-    @NotBlank
-    @NotNull
     private String Role;
-    @NotBlank
-    @NotNull
-    private String nextOfKinDetails;
     @NotBlank
     @NotNull
     private String password;

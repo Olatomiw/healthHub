@@ -26,6 +26,7 @@ public class PatientServiceImpl implements PatientService {
 
 
     @Override
+//    Creating new Patient
     public ResponseEntity<?> newPatient(PatientDto patientDto, HttpServletRequest request) {
         Profile loggedInStaff = cookieAuthenticationService.getLoggedInStaff(request);
         String name = loggedInStaff.getFirstName();

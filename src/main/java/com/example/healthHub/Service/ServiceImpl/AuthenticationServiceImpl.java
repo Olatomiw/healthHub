@@ -9,6 +9,7 @@ import com.example.healthHub.Repository.AdminRepository;
 import com.example.healthHub.Repository.ProfileRepository;
 import com.example.healthHub.Service.AuthenticationService;
 import com.example.healthHub.Service.CookieAuthenticationService;
+import com.example.healthHub.Service.ExtendedSecurityService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,30 +28,32 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private ProfileRepository profileRepository;
     @Autowired
     private CookieAuthenticationService cookieAuthenticationService;
+    @Autowired
+    private ExtendedSecurityService securityService;
 
     @Override
     public ResponseEntity<?> login(AuthenticationDto authenticationDto, HttpServletRequest request, HttpServletResponse response) {
-        Optional<Admin> optionalAdmin = adminRepository.findByEmail(authenticationDto.getEmail());
+//        Optional<Admin> optionalAdmin = adminRepository.findByEmail(authenticationDto.getEmail());
         Optional<Profile>optionalProfile = profileRepository.findByStaffId(authenticationDto.getEmail());
         ApiResponse<String> apiResponse = new ApiResponse<>();
         try {
-            if (optionalAdmin.isEmpty() && optionalProfile.isEmpty()){
+            if (optionalProfile.isEmpty()){
                 return new ResponseEntity<>("User Not Found", HttpStatus.NOT_FOUND);
             }
-            if (optionalAdmin.isPresent()){
-                Admin admin = optionalAdmin.get();
-                if (!admin.getPassword().equals(authenticationDto.getPassword())){
-                    return new ResponseEntity<>("Password does not match", HttpStatus.UNAUTHORIZED);
-                }
-                cookieAuthenticationService.login(admin, response );
-                return new ResponseEntity<>("succesful", HttpStatus.OK);
-            }
+//            if (optionalAdmin.isPresent()){
+//                Admin admin = optionalAdmin.get();
+//                if (!admin.getPassword().equals(authenticationDto.getPassword())){
+//                    return new ResponseEntity<>("Password does not match", HttpStatus.UNAUTHORIZED);
+//                }
+//                cookieAuthenticationService.login(admin, response );
+//                return new ResponseEntity<>("succesful", HttpStatus.OK);
+//            }
             if (optionalProfile.isPresent()){
                 Profile profile = optionalProfile.get();
                 if (!profile.getPassword().equals(authenticationDto.getPassword())){
                     return new ResponseEntity<>("Invalid Login details", HttpStatus.UNAUTHORIZED);
                 }
-                cookieAuthenticationService.login(profile,response);
+                securityService.login(profile, response, request);
                 apiResponse.setMessage("Success");
                 return new ResponseEntity<>(apiResponse, HttpStatus.OK);
             }

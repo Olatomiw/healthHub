@@ -1,6 +1,8 @@
 package com.example.healthHub.Model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Persistent;
@@ -20,6 +22,9 @@ public class Profile {
     private String firstName;
     @Column(nullable = false)
     private String lastName;
+    @Email
+    @Column(nullable = false)
+    private String email;
     @Column(nullable = false)
     private Long Age;
     @Column(nullable = false)
@@ -29,13 +34,11 @@ public class Profile {
     @Column(nullable = false)
     private Long phoneNumber;
     @Column(nullable = false)
-    private String Token;
-    @Column(nullable = false)
     private String Role;
-    @Column(nullable = false)
-    private String nextOfKinDetails;
     private String staffId;
     private boolean deleted;
+    @Column(nullable = false)
+    @Size(min = 8)
     private String password;
 
 //    @Override
