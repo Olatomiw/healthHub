@@ -1,6 +1,7 @@
 package com.example.healthHub.Service.ServiceImpl;
 
 
+import com.example.healthHub.Config.UserRole;
 import com.example.healthHub.Dto.ProfileDto;
 import com.example.healthHub.Dto.response.ApiResponse;
 import com.example.healthHub.Model.Profile;
@@ -36,7 +37,7 @@ public class ProfileServiceImpl implements ProfileService {
             profile.setFirstName(profileDto.getFirstName());
             profile.setLastName(profileDto.getLastName());
             profile.setAge(profileDto.getAge());
-            profile.setRole(profileDto.getRole());
+            profile.setRole(UserRole.ADMIN);
             profile.setSex(profileDto.getSex());
             profile.setAddress(profileDto.getAddress());
             profile.setEmail(profileDto.getEmail());

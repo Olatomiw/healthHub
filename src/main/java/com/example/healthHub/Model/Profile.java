@@ -1,5 +1,6 @@
 package com.example.healthHub.Model;
 
+import com.example.healthHub.Config.UserRole;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
@@ -34,7 +35,8 @@ public class Profile {
     @Column(nullable = false)
     private Long phoneNumber;
     @Column(nullable = false)
-    private String Role;
+    @Enumerated(EnumType.STRING)
+    private UserRole Role;
     private String staffId;
     private boolean deleted;
     @Column(nullable = false)

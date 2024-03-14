@@ -29,9 +29,6 @@ public class ProfileDto {
     private Long phoneNumber;
     @NotBlank
     @NotNull
-    private String Role;
-    @NotBlank
-    @NotNull
     private String password;
 
 

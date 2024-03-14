@@ -30,7 +30,7 @@ public class PatientServiceImpl implements PatientService {
     public ResponseEntity<?> newPatient(PatientDto patientDto, HttpServletRequest request) {
         Profile loggedInStaff = cookieAuthenticationService.getLoggedInStaff(request);
         String name = loggedInStaff.getFirstName();
-        String role = loggedInStaff.getRole();
+        String role = loggedInStaff.getRole().toString();
         ApiResponse<String> apiResponse = new ApiResponse<>();
         Patient patient = new Patient();
         try {
