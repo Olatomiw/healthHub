@@ -45,7 +45,8 @@ public class ProfileServiceImpl implements ProfileService {
             profile.setStaffId(String.format("KH/%04d/%d", id, currentYear));
             profile.setPassword(profileDto.getPassword());
             String staffId = profile.getStaffId();
-            Optional<Profile> optionalProfile=profileRepository.findByStaffId(staffId);
+            Long phoneNumber = profileDto.getPhoneNumber();
+            Optional<Profile> optionalProfile=profileRepository.findByPhoneNumber(phoneNumber);
             if(optionalProfile.isPresent()){
                 apiResponse.setMessage("User already exist");
                 return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
