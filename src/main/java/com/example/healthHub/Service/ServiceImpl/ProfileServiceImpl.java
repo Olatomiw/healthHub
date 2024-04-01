@@ -12,6 +12,7 @@ import com.example.healthHub.Service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -26,6 +27,11 @@ public class ProfileServiceImpl implements ProfileService {
     private ProfileRepository profileRepository;
     @Autowired
     private TokenRepository tokenRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+
+
     @Override
     public ResponseEntity<?> createProfile(ProfileDto profileDto) {
         Profile profile = new Profile();
@@ -37,13 +43,13 @@ public class ProfileServiceImpl implements ProfileService {
             profile.setFirstName(profileDto.getFirstName());
             profile.setLastName(profileDto.getLastName());
             profile.setAge(profileDto.getAge());
-            profile.setRole(UserRole.ADMIN);
+            profile.setRole(UserRole.ROLE_DOCTOR);
             profile.setSex(profileDto.getSex());
             profile.setAddress(profileDto.getAddress());
             profile.setEmail(profileDto.getEmail());
             profile.setPhoneNumber(profileDto.getPhoneNumber());
             profile.setStaffId(String.format("KH/%04d/%d", id, currentYear));
-            profile.setPassword(profileDto.getPassword());
+            profile.setPassword(passwordEncoder.encode(profileDto.getPassword()));
             String staffId = profile.getStaffId();
             Long phoneNumber = profileDto.getPhoneNumber();
             Optional<Profile> optionalProfile=profileRepository.findByPhoneNumber(phoneNumber);

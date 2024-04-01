@@ -15,12 +15,12 @@ public class Patient {
     private Long id;
     private String fullName;
     private String bloodGroup;
+    private String genotype;
     private Long age;
     private String address;
     private Instant createdAt;
     private Instant updatedAt;
     private String createdBy;
-    private String patientId;
     @OneToMany( cascade = CascadeType.ALL)
     @JoinColumn(name = "patient_id", referencedColumnName = "id")
     private List<PatientsReport> reportList;
@@ -95,5 +95,13 @@ public class Patient {
 
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
+    }
+
+    public String getGenotype() {
+        return genotype;
+    }
+
+    public void setGenotype(String genotype) {
+        this.genotype = genotype;
     }
 }

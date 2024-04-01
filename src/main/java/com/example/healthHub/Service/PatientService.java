@@ -5,5 +5,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 
 public interface PatientService {
-    ResponseEntity<?> newPatient(PatientDto patientDto, HttpServletRequest request);
+    ResponseEntity<?> newPatient(PatientDto patientDto);
+    ResponseEntity<?>ourPatient();
 }

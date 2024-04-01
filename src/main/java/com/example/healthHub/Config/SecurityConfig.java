@@ -25,12 +25,14 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception {
         DefaultSecurityFilterChain securityFilterChain = http
                 .csrf(e->e.disable())
+                .cors(e->e.disable())
                 .formLogin(e->e
                         .defaultSuccessUrl("/welcome"))
                 .authorizeHttpRequests(e->e
-                        .requestMatchers(HttpMethod.POST, "/profile").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/new_patient")
-                        .hasAnyAuthority(UserRole.ADMIN.toString(), UserRole.DOCTOR.toString())
+                        .requestMatchers( "/profile", "/patient").permitAll()
+                        .requestMatchers("/new_patient")
+                        .hasAnyAuthority(UserRole.ROLE_ADMIN.toString(),
+                                UserRole.ROLE_DOCTOR.toString())
                         .anyRequest().authenticated())
                 .build();
         return securityFilterChain;
@@ -43,7 +45,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder(){
-        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
