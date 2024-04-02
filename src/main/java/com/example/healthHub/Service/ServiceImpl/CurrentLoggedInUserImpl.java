@@ -25,7 +25,8 @@ public class CurrentLoggedInUserImpl implements CurrentLoggedInUserService {
     public ResponseEntity<ProfileInstance> getCurrentLoggedInUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         try{
-            if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal()instanceof UserDetails){
+            if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal()
+                    instanceof UserDetails){
                 UserDetails userDetails = (UserDetails)authentication.getPrincipal();
                 Object details = authentication.getDetails();
                 String username = userDetails.getUsername();

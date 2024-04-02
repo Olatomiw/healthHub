@@ -28,9 +28,10 @@ public class SecurityConfig {
                 .cors(e->e.disable())
                 .formLogin(e->e
                         .defaultSuccessUrl("/welcome"))
+                .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(e->e
-                        .requestMatchers( "/profile", "/patient").permitAll()
-                        .requestMatchers("/new_patient")
+                        .requestMatchers( "/profile").permitAll()
+                        .requestMatchers("/new_patient", "patient")
                         .hasAnyAuthority(UserRole.ROLE_ADMIN.toString(),
                                 UserRole.ROLE_DOCTOR.toString())
                         .anyRequest().authenticated())
