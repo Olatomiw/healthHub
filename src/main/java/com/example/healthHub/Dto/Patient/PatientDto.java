@@ -4,12 +4,14 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.Instant;
+import java.util.Date;
 
 public class    PatientDto {
 
     @NotBlank
     @NotNull
-    private String name;
+    private String firstName;
+    private String lastName;
     @NotBlank
     @NotNull
     private String bloodGroup;
@@ -23,13 +25,31 @@ public class    PatientDto {
     private String address;
     private Instant createdAt;
     private Instant updatedAt;
+    private Date date;
+    private Long phoneNumber;
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public Long getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(Long phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getBloodGroup() {
@@ -78,5 +98,13 @@ public class    PatientDto {
 
     public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

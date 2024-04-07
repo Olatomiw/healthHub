@@ -10,5 +10,6 @@ public class ProfileInstance {
     private String lastName;
     private String sex;
     private String staffId;
+    private Enum role;
     private Long age;
 }

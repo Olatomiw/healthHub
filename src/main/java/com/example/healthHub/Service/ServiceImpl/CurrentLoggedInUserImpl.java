@@ -39,6 +39,7 @@ public class CurrentLoggedInUserImpl implements CurrentLoggedInUserService {
                 profileInstance.setSex(profile.getSex());
                 profileInstance.setStaffId(profile.getStaffId());
                 profileInstance.setAge(profile.getAge());
+                profileInstance.setRole(profile.getRole());
                 return new ResponseEntity<>(profileInstance, HttpStatus.OK);
             }
         }catch (Exception e){

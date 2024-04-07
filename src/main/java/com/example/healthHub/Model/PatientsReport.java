@@ -6,6 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 @Entity
 @Getter
@@ -23,4 +24,87 @@ public class PatientsReport {
     private String doctorInCharge;
     private String nurseInCharge;
     private String labAttendant;
+
+    private Boolean active = true;
+
+    public String getHeight() {
+        return height;
+    }
+
+
+    public void setHeight(String height) {
+        this.height = height;
+    }
+
+    public String getWeight() {
+        return weight;
+    }
+
+    public void setWeight(String weight) {
+        this.weight = weight;
+    }
+
+    public String getBloodPressure() {
+        return bloodPressure;
+    }
+
+    public void setBloodPressure(String bloodPressure) {
+        this.bloodPressure = bloodPressure;
+    }
+
+    public String getLabReport() {
+        return labReport;
+    }
+
+    public void setLabReport(String labReport) {
+        this.labReport = labReport;
+    }
+
+    public String getDoctorsReport() {
+        return doctorsReport;
+    }
+
+    public void setDoctorsReport(String doctorsReport) {
+        this.doctorsReport = doctorsReport;
+    }
+
+    public String getPrescribedDrugs() {
+        return prescribedDrugs;
+    }
+
+    public void setPrescribedDrugs(String prescribedDrugs) {
+        this.prescribedDrugs = prescribedDrugs;
+    }
+
+    public String getDoctorInCharge() {
+        return doctorInCharge;
+    }
+
+    public void setDoctorInCharge(String doctorInCharge) {
+        this.doctorInCharge = doctorInCharge;
+    }
+
+    public String getNurseInCharge() {
+        return nurseInCharge;
+    }
+
+    public void setNurseInCharge(String nurseInCharge) {
+        this.nurseInCharge = nurseInCharge;
+    }
+
+    public String getLabAttendant() {
+        return labAttendant;
+    }
+
+    public void setLabAttendant(String labAttendant) {
+        this.labAttendant = labAttendant;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
 }
