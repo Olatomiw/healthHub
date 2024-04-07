@@ -13,8 +13,6 @@ public class PatientReportDto {
     private String labReport;
     private String doctorsReport;
     private String prescribedDrugs;
-    @NotNull
-    private Long Age;
 
     public String getHeight() {
         return height;

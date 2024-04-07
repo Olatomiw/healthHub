@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 
 public interface PatientService {
     ResponseEntity<?> newPatient(PatientDto patientDto);
-    ResponseEntity<?>patientRecord(String patientId, PatientReportDto patientReportDto);
+    ResponseEntity<?>patientRecord(PatientReportDto patientReportDto, Long id);
 
     ResponseEntity<?> activeSessions();
 }

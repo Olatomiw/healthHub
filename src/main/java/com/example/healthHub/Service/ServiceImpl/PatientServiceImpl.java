@@ -78,28 +78,32 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public ResponseEntity<?> patientRecord(String patientId, PatientReportDto patientReportDto) {
+    public ResponseEntity<?> patientRecord( PatientReportDto patientReportDto ,Long id) {
         ResponseEntity<ProfileInstance> currentLoggedInUser = currentLoggedInUserService.getCurrentLoggedInUser();
         ProfileInstance loggedInUser = currentLoggedInUser.getBody();
-        Optional<Patient> byPatientId = patientRepository.findByPatientId(patientId);
+        Optional<Patient> byPatientId = patientRepository.findById(id);
         PatientsReport patientsReport = new PatientsReport();
         try {
             if (byPatientId.isEmpty()){
-                return new ResponseEntity<>("NotFound", HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("Not Found", HttpStatus.NOT_FOUND);
             }
             Patient patient = byPatientId.get();
             List<PatientsReport> reportList = patient.getReportList();
-            if (loggedInUser.getRole() == UserRole.ROLE_NURSE){
+            if (loggedInUser.getRole() == UserRole.ROLE_DOCTOR){
                 patientsReport.setBloodPressure(patientReportDto.getBloodPressure());
                 patientsReport.setHeight(patientReportDto.getHeight());
                 patientsReport.setWeight(patientReportDto.getWeight());
                 reportList.add(patientsReport);
+                patientRepository.save(patient);
+                return new ResponseEntity<>(patient, HttpStatus.OK);
+            }else {
+                return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
             }
         }catch (Exception e){
             e.printStackTrace();
         }
 
-        return null;
+        return new ResponseEntity<>("Failed", HttpStatus.BAD_REQUEST);
 
     }
 

@@ -30,15 +30,12 @@ public class PatientController {
         return patientService.newPatient(patientDto);
     }
 
-    @GetMapping("/patient")
-//    private ResponseEntity<?> create(){
-//        return patientService.patientRecord();
-//    }
 
-    @PostMapping("patientRecord/{patientId}")
-    private ResponseEntity<?> patientRecord(@PathVariable String patientId, @RequestBody PatientReportDto patientReportDto){
-        patientService.patientRecord(patientId, patientReportDto);
-        return null;
+
+    @PostMapping("/patientRecord/{id}")
+    private ResponseEntity<?> patientRecord(@PathVariable Long id, @Valid @RequestBody PatientReportDto patientReportDto){
+        return patientService.patientRecord(patientReportDto, id);
+
     }
 
     @GetMapping("/getPatient/{id}")
