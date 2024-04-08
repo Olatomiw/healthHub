@@ -38,6 +38,10 @@ public class PatientController {
 
     }
 
+    @PostMapping("/doctorsReport/{id}")
+    private ResponseEntity<?> doctorsReport(@PathVariable Long id,@RequestBody PatientReportDto patientReportDto){
+        return patientService.doctorReport(id,patientReportDto);
+    }
     @GetMapping("/getPatient/{id}")
     private ResponseEntity<?> getPatient(@Valid @PathVariable Long id){
         Optional<Patient> byId = patientRepository.findById(id);

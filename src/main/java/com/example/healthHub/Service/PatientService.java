@@ -9,5 +9,7 @@ public interface PatientService {
     ResponseEntity<?> newPatient(PatientDto patientDto);
     ResponseEntity<?>patientRecord(PatientReportDto patientReportDto, Long id);
 
+    ResponseEntity<?>doctorReport(Long id, PatientReportDto patientReportDto);
+
     ResponseEntity<?> activeSessions();
 }

@@ -24,8 +24,7 @@ public class PatientsReport {
     private String doctorInCharge;
     private String nurseInCharge;
     private String labAttendant;
-
-    private Boolean active = true;
+    private Boolean active = false;
 
     public String getHeight() {
         return height;

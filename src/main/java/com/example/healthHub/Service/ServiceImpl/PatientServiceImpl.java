@@ -41,6 +41,11 @@ public class PatientServiceImpl implements PatientService {
     private PatientReportRepository patientReportRepository;
 
 
+
+
+
+
+
     @Override
 //    Creating new Patient
     public ResponseEntity<?> newPatient(PatientDto patientDto) {
@@ -77,6 +82,12 @@ public class PatientServiceImpl implements PatientService {
         return new ResponseEntity<>("error", HttpStatus.BAD_REQUEST);
     }
 
+
+
+
+
+
+
     @Override
     public ResponseEntity<?> patientRecord( PatientReportDto patientReportDto ,Long id) {
         ResponseEntity<ProfileInstance> currentLoggedInUser = currentLoggedInUserService.getCurrentLoggedInUser();
@@ -89,14 +100,18 @@ public class PatientServiceImpl implements PatientService {
             }
             Patient patient = byPatientId.get();
             List<PatientsReport> reportList = patient.getReportList();
-            if (loggedInUser.getRole() == UserRole.ROLE_DOCTOR){
+            for (PatientsReport report : reportList ){
+                report.getActive();
+            }
+            if (loggedInUser.getRole() == UserRole.ROLE_NURSE){
                 patientsReport.setBloodPressure(patientReportDto.getBloodPressure());
                 patientsReport.setHeight(patientReportDto.getHeight());
                 patientsReport.setWeight(patientReportDto.getWeight());
                 reportList.add(patientsReport);
                 patientRepository.save(patient);
                 return new ResponseEntity<>(patient, HttpStatus.OK);
-            }else {
+            }
+             else {
                 return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
             }
         }catch (Exception e){
@@ -107,6 +122,47 @@ public class PatientServiceImpl implements PatientService {
 
     }
 
+
+
+
+
+
+
+    @Override
+    public ResponseEntity<?> doctorReport(Long id, PatientReportDto patientReportDto) {
+        ResponseEntity<ProfileInstance> currentLoggedInUser =
+                currentLoggedInUserService.getCurrentLoggedInUser();
+        ProfileInstance loggedInUser = currentLoggedInUser.getBody();
+        Optional<Patient> byPatientId = patientRepository.findById(id);
+        Patient patient = byPatientId.get();
+        PatientsReport existingReport = existingRecord(patient);
+        try {
+            if (byPatientId.isEmpty()){
+                return new ResponseEntity<>("Not Found", HttpStatus.NOT_FOUND);
+            }
+            if (existingReport != null && existingReport.getActive().equals(true)){
+                existingReport.setDoctorsReport(patientReportDto.getDoctorsReport());
+                existingReport.setDoctorInCharge(loggedInUser.getStaffId());
+                existingReport.setPrescribedDrugs(patientReportDto.getPrescribedDrugs());
+                patientRepository.save(patient);
+                return new ResponseEntity<>(patient, HttpStatus.OK);
+            } else if (existingReport == null) {
+                PatientsReport newReport = new PatientsReport();
+                List<PatientsReport> reportList = patient.getReportList();
+                newReport.setActive(Boolean.TRUE);
+                newReport.setDoctorsReport(patientReportDto.getDoctorsReport());
+                newReport.setDoctorInCharge(loggedInUser.getStaffId());
+                newReport.setPrescribedDrugs(patientReportDto.getPrescribedDrugs());
+                reportList.add(newReport);
+                patientRepository.save(patient);
+                return new ResponseEntity<>(patient, HttpStatus.OK);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @Override
     public ResponseEntity<?> activeSessions() {
         List<PatientsReport> allByActive = patientReportRepository.findAllByActive(true);
@@ -114,4 +170,13 @@ public class PatientServiceImpl implements PatientService {
     }
 
 
+//    Method
+    public PatientsReport existingRecord(Patient patient){
+        for (PatientsReport report : patient.getReportList()){
+            if (report.getActive().equals(true)){
+                return report;
+            }
+        }
+        return null;
+    }
 }
