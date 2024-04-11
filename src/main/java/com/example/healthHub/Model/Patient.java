@@ -27,7 +27,7 @@ public class Patient {
     private String patientId;
     private Long phoneNumber;
     private String createdBy;
-    @OneToMany( cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "patient_id", referencedColumnName = "id")
     private List<PatientsReport> reportList;
 

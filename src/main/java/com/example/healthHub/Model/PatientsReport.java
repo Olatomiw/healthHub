@@ -1,9 +1,6 @@
 package com.example.healthHub.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,6 +23,9 @@ public class PatientsReport {
     private String labAttendant;
     private Boolean active = false;
 
+//    @ManyToOne
+//    @JoinColumn(name = "patient_id")
+//    private Patient patient;
     public String getHeight() {
         return height;
     }

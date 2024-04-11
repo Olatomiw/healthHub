@@ -41,11 +41,6 @@ public class PatientServiceImpl implements PatientService {
     private PatientReportRepository patientReportRepository;
 
 
-
-
-
-
-
     @Override
 //    Creating new Patient
     public ResponseEntity<?> newPatient(PatientDto patientDto) {
@@ -82,7 +77,16 @@ public class PatientServiceImpl implements PatientService {
         return new ResponseEntity<>("error", HttpStatus.BAD_REQUEST);
     }
 
-
+// Getting Patient Active Record
+    public PatientsReport getPatientReport(Long id){
+        Optional<PatientsReport> activeReportByPatientId =
+                patientReportRepository.findActiveReportByPatientId(id);
+        if (activeReportByPatientId.isPresent()){
+            PatientsReport report = activeReportByPatientId.get();
+            return report;
+        }
+        return null;
+    }
 
 
 
@@ -93,23 +97,28 @@ public class PatientServiceImpl implements PatientService {
         ResponseEntity<ProfileInstance> currentLoggedInUser = currentLoggedInUserService.getCurrentLoggedInUser();
         ProfileInstance loggedInUser = currentLoggedInUser.getBody();
         Optional<Patient> byPatientId = patientRepository.findById(id);
-        PatientsReport patientsReport = new PatientsReport();
         try {
             if (byPatientId.isEmpty()){
                 return new ResponseEntity<>("Not Found", HttpStatus.NOT_FOUND);
             }
             Patient patient = byPatientId.get();
             List<PatientsReport> reportList = patient.getReportList();
-            for (PatientsReport report : reportList ){
-                report.getActive();
-            }
             if (loggedInUser.getRole() == UserRole.ROLE_NURSE){
+                PatientsReport patientsReport = new PatientsReport();
                 patientsReport.setBloodPressure(patientReportDto.getBloodPressure());
                 patientsReport.setHeight(patientReportDto.getHeight());
                 patientsReport.setWeight(patientReportDto.getWeight());
+                patientsReport.setActive(true);
+                patientsReport.setNurseInCharge(loggedInUser.getStaffId());
                 reportList.add(patientsReport);
-                patientRepository.save(patient);
-                return new ResponseEntity<>(patient, HttpStatus.OK);
+                if (getPatientReport(id)!=null){
+                    return new ResponseEntity<>("Patient has an existing session that's yet to be closed",
+                            HttpStatus.CONFLICT);
+                }
+                else if (getPatientReport(id) == null){
+                    patientRepository.save(patient);
+                    return new ResponseEntity<>(patient, HttpStatus.OK);
+                }
             }
              else {
                 return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
@@ -121,12 +130,6 @@ public class PatientServiceImpl implements PatientService {
         return new ResponseEntity<>("Failed", HttpStatus.BAD_REQUEST);
 
     }
-
-
-
-
-
-
 
     @Override
     public ResponseEntity<?> doctorReport(Long id, PatientReportDto patientReportDto) {
@@ -140,13 +143,14 @@ public class PatientServiceImpl implements PatientService {
             if (byPatientId.isEmpty()){
                 return new ResponseEntity<>("Not Found", HttpStatus.NOT_FOUND);
             }
-            if (existingReport != null && existingReport.getActive().equals(true)){
-                existingReport.setDoctorsReport(patientReportDto.getDoctorsReport());
-                existingReport.setDoctorInCharge(loggedInUser.getStaffId());
-                existingReport.setPrescribedDrugs(patientReportDto.getPrescribedDrugs());
+            if (getPatientReport(id) != null && getPatientReport(id).getActive().equals(true)){
+                PatientsReport patientReport = getPatientReport(id);
+                patientReport.setDoctorsReport(patientReportDto.getDoctorsReport());
+                patientReport.setDoctorInCharge(loggedInUser.getStaffId());
+                patientReport.setPrescribedDrugs(patientReportDto.getPrescribedDrugs());
                 patientRepository.save(patient);
                 return new ResponseEntity<>(patient, HttpStatus.OK);
-            } else if (existingReport == null) {
+            } else if (getPatientReport(id) == null) {
                 PatientsReport newReport = new PatientsReport();
                 List<PatientsReport> reportList = patient.getReportList();
                 newReport.setActive(Boolean.TRUE);
@@ -166,11 +170,36 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public ResponseEntity<?> activeSessions() {
         List<PatientsReport> allByActive = patientReportRepository.findAllByActive(true);
-        return new ResponseEntity<>("allByActive", HttpStatus.OK);
+        return new ResponseEntity<>(allByActive, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> setActiveSessionToFalse(Long id) {
+        Optional<Patient> byId = patientRepository.findById(id);
+        try {
+            if (byId.isEmpty()){
+                return new ResponseEntity<>("Patient Not Found", HttpStatus.NOT_FOUND);
+            }
+            Patient foundPatient = byId.get();
+            Long patientId = foundPatient.getId();
+            Optional<PatientsReport> activeReportByPatientId =
+                    patientReportRepository.findActiveReportByPatientId(patientId);
+            if (activeReportByPatientId.isEmpty()){
+                return new ResponseEntity<>("No Active session found", HttpStatus.NOT_FOUND);
+            } else if (activeReportByPatientId.isPresent()) {
+                PatientsReport report = activeReportByPatientId.get();
+                report.setActive(false);
+                patientRepository.save(foundPatient);
+                return new ResponseEntity<>(foundPatient, HttpStatus.OK);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 
-//    Method
+    //    Method
     public PatientsReport existingRecord(Patient patient){
         for (PatientsReport report : patient.getReportList()){
             if (report.getActive().equals(true)){
@@ -179,4 +208,7 @@ public class PatientServiceImpl implements PatientService {
         }
         return null;
     }
+
+//
+
 }

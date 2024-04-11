@@ -12,4 +12,6 @@ public interface PatientService {
     ResponseEntity<?>doctorReport(Long id, PatientReportDto patientReportDto);
 
     ResponseEntity<?> activeSessions();
+
+    ResponseEntity<?>setActiveSessionToFalse(Long id);
 }

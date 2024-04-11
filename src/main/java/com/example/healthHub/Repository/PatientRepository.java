@@ -9,4 +9,6 @@ public interface PatientRepository extends JpaRepository<Patient, Long>{
     Optional<Patient>findByPatientId(String patientId);
     Optional<Patient>findByPhoneNumber(Long number);
 
+//    Optional<Patient>findByIdAndActive(Long id, Boolean active);
+
 }
