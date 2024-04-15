@@ -33,7 +33,7 @@ public class ProfileServiceImpl implements ProfileService {
 
 
     @Override
-    public ResponseEntity<?> createProfile(ProfileDto profileDto) {
+    public ResponseEntity<?> createProfile(ProfileDto profileDto, UserRole role ) {
         Profile profile = new Profile();
         ApiResponse<String> apiResponse = new ApiResponse<>();
         int currentYear = Year.now().getValue();
@@ -43,7 +43,7 @@ public class ProfileServiceImpl implements ProfileService {
             profile.setFirstName(profileDto.getFirstName());
             profile.setLastName(profileDto.getLastName());
             profile.setAge(profileDto.getAge());
-            profile.setRole(UserRole.ROLE_DOCTOR);
+            profile.setRole(role);
             profile.setSex(profileDto.getSex());
             profile.setAddress(profileDto.getAddress());
             profile.setEmail(profileDto.getEmail());
@@ -67,4 +67,5 @@ public class ProfileServiceImpl implements ProfileService {
         }
         return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
     }
+
 }

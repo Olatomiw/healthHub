@@ -1,5 +1,6 @@
 package com.example.healthHub.Controller;
 
+import com.example.healthHub.Config.UserRole;
 import com.example.healthHub.Dto.ProfileDto;
 import com.example.healthHub.Model.Profile;
 import com.example.healthHub.Repository.ProfileRepository;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -25,10 +27,20 @@ public class StaffController {
     @Autowired
     private CurrentLoggedInUserService currentLoggedInUserService;
 
-    @PostMapping("/profile")
+    @PostMapping("/register/doctor")
     public ResponseEntity<?> createProfile(@Valid @RequestBody ProfileDto profileDto){
-        return profileService.createProfile(profileDto);
+        return profileService.createProfile(profileDto, UserRole.ROLE_DOCTOR);
     }
+    @PostMapping("/register/nurse")
+    public ResponseEntity<?>nurseRegistration(@Valid @RequestBody ProfileDto profileDto){
+        return profileService.createProfile(profileDto, UserRole.ROLE_NURSE);
+    }
+
+    @PostMapping("/register/lab")
+    public ResponseEntity<?>labRegistration(@Valid @RequestBody ProfileDto profileDto){
+        return profileService.createProfile(profileDto,UserRole.ROLE_LAB_ATTENDANT);
+    }
+
 
     @GetMapping("/getUser")
     public ResponseEntity<?> getUser(){

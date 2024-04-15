@@ -24,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.Year;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -145,7 +146,9 @@ public class PatientServiceImpl implements PatientService {
             }
             if (getPatientReport(id) != null && getPatientReport(id).getActive().equals(true)){
                 PatientsReport patientReport = getPatientReport(id);
-                patientReport.setDoctorsReport(patientReportDto.getDoctorsReport());
+                List<String>myReport = new ArrayList<>();
+                myReport.add(patientReportDto.getDoctorsReport());
+                patientReport.setDoctorsReport(myReport);
                 patientReport.setDoctorInCharge(loggedInUser.getStaffId());
                 patientReport.setPrescribedDrugs(patientReportDto.getPrescribedDrugs());
                 patientRepository.save(patient);
@@ -154,7 +157,7 @@ public class PatientServiceImpl implements PatientService {
                 PatientsReport newReport = new PatientsReport();
                 List<PatientsReport> reportList = patient.getReportList();
                 newReport.setActive(Boolean.TRUE);
-                newReport.setDoctorsReport(patientReportDto.getDoctorsReport());
+                newReport.getDoctorsReport().add(patientReportDto.getDoctorsReport());
                 newReport.setDoctorInCharge(loggedInUser.getStaffId());
                 newReport.setPrescribedDrugs(patientReportDto.getPrescribedDrugs());
                 reportList.add(newReport);

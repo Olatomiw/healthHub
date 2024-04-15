@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -12,11 +14,11 @@ public class PatientsReport {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String height;
-    private String weight;
-    private String bloodPressure;
+        private String height;
+        private String weight;
+        private String bloodPressure;
     private String labReport;
-    private String doctorsReport;
+    private List<String> doctorsReport;
     private String prescribedDrugs;
     private String doctorInCharge;
     private String nurseInCharge;
@@ -59,11 +61,11 @@ public class PatientsReport {
         this.labReport = labReport;
     }
 
-    public String getDoctorsReport() {
+    public List<String> getDoctorsReport() {
         return doctorsReport;
     }
 
-    public void setDoctorsReport(String doctorsReport) {
+    public void setDoctorsReport(List<String> doctorsReport) {
         this.doctorsReport = doctorsReport;
     }
 

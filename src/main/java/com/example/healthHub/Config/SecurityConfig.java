@@ -30,10 +30,11 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/welcome"))
                 .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(e->e
-                        .requestMatchers( "/profile").permitAll()
+                        .requestMatchers( "/register/**").permitAll()
                         .requestMatchers("/new_patient", "patient")
                         .hasAnyAuthority(UserRole.ROLE_ADMIN.toString(),
                                 UserRole.ROLE_DOCTOR.toString())
+                        .requestMatchers("/doctorsReport/**").hasAuthority(UserRole.ROLE_DOCTOR.toString())
                         .anyRequest().authenticated())
                 .build();
         return securityFilterChain;
