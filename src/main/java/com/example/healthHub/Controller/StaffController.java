@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
-@RequestMapping
+@RequestMapping("api/v1/")
 public class StaffController {
     @Autowired
     private ProfileService profileService;
