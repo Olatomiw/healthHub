@@ -211,7 +211,4 @@ public class PatientServiceImpl implements PatientService {
         }
         return null;
     }
-
-//
-
 }
