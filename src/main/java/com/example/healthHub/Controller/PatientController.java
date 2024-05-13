@@ -2,6 +2,7 @@ package com.example.healthHub.Controller;
 
 import com.example.healthHub.Dto.Patient.PatientDto;
 import com.example.healthHub.Dto.Patient.PatientReportDto;
+import com.example.healthHub.Exception.ApiExceptionRequest;
 import com.example.healthHub.Model.Patient;
 import com.example.healthHub.Model.PatientsReport;
 import com.example.healthHub.Repository.PatientReportRepository;
@@ -11,6 +12,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -52,7 +54,8 @@ public class PatientController {
         Optional<Patient> byId = patientRepository.findById(id);
         try {
             if (byId.isEmpty()){
-                return new ResponseEntity<>("Not Found", HttpStatus.NOT_FOUND);
+                throw new ApiExceptionRequest("Not Foun");
+//                return new ResponseEntity<>("Not Found", HttpStatus.NOT_FOUND);
             }
             Patient patient = byId.get();
             List<PatientsReport> reportList = patient.getReportList();
@@ -80,4 +83,10 @@ public class PatientController {
     private ResponseEntity<?> setReportToFalse(@PathVariable Long id){
         return patientService.setActiveSessionToFalse(id);
     }
+
+    @GetMapping("error")
+    public String error (){
+        throw new ApiExceptionRequest("error");
+    }
+
 }

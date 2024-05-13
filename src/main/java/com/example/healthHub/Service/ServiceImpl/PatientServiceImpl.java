@@ -4,6 +4,7 @@ import com.example.healthHub.Config.UserRole;
 import com.example.healthHub.Dto.Patient.PatientDto;
 import com.example.healthHub.Dto.Patient.PatientReportDto;
 import com.example.healthHub.Dto.response.ApiResponse;
+import com.example.healthHub.Exception.ApiExceptionRequest;
 import com.example.healthHub.Model.Patient;
 import com.example.healthHub.Model.PatientsReport;
 import com.example.healthHub.Model.Profile;
@@ -113,8 +114,7 @@ public class PatientServiceImpl implements PatientService {
                 patientsReport.setNurseInCharge(loggedInUser.getStaffId());
                 reportList.add(patientsReport);
                 if (getPatientReport(id)!=null){
-                    return new ResponseEntity<>("Patient has an existing session that's yet to be closed",
-                            HttpStatus.CONFLICT);
+                  throw new ApiExceptionRequest("Patient has an existing session that's yet to be closed");
                 }
                 else if (getPatientReport(id) == null){
                     patientRepository.save(patient);
